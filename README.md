@@ -1,32 +1,28 @@
-🎬 Movie API (Web2 Final Project)
-📌 Project Overview
+# 🎬 Movie API (Web2 Final Project)
 
-This project is a backend REST API for a Movie Website.
+## 📌 Project Overview
+This project is a backend REST API for a Movie Website.  
 Users can register, log in, create movies, write reviews, rate movies, and view ratings and comments.
 
-The API is built using Node.js, Express.js, and MongoDB, following a clean and modular architecture.
+The API is built using **Node.js**, **Express.js**, and **MongoDB**, following a clean and modular architecture.
 
-🛠 Technologies Used
+---
 
-Node.js
+## 🛠 Technologies Used
+- Node.js  
+- Express.js  
+- MongoDB  
+- Mongoose  
+- JWT (Authentication)  
+- bcryptjs (Password hashing)  
+- Validator.js (Input validation)  
+- Axios (External API requests)  
+- OMDb API (External movie information)
 
-Express.js
+---
 
-MongoDB
-
-Mongoose
-
-JWT (Authentication)
-
-bcryptjs (Password hashing)
-
-Validator.js (Input validation)
-
-Axios (External API requests)
-
-OMDb API (External movie information)
-
-📁 Project Structure
+## 📁 Project Structure
+```text
 src/
 ├── config/
 │   └── db.js
@@ -50,6 +46,7 @@ src/
 ├── app.js
 └── server.js
 
+
 ⚙️ Setup & Installation
 1️⃣ Clone the repository
 git clone <your-repo-link>
@@ -68,14 +65,14 @@ OMDB_API_KEY=your_omdb_api_key
 npm run dev
 
 
-Server will start on:
-👉 http://localhost:5000
+📍 Server will start at:
+http://localhost:5000
 
 🔐 Authentication
 
 JWT is used for user authentication
 
-Protected routes require a token in headers:
+Protected routes require a token in request headers:
 
 Authorization: Bearer <token>
 
@@ -132,8 +129,8 @@ Input validation
 
 🚀 Deployment
 
-The project can be deployed on platforms like Render, Railway, or Replit.
-All sensitive data is stored using environment variables.
+The project can be deployed on Render, Railway, or Replit.
+All sensitive data is managed using environment variables.
 
 👨‍🎓 Author
 

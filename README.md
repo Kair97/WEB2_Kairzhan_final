@@ -80,14 +80,17 @@ Authorization: Bearer <token>
 Passwords are securely hashed using bcrypt
 
 📌 API Documentation
+
 🔑 Auth Routes (Public)
 Method	Endpoint	Description
 POST	/api/auth/register	Register new user
 POST	/api/auth/login	Login user
+
 👤 User Routes (Private)
 Method	Endpoint	Description
 GET	/api/users/profile	Get logged-in user profile
 PUT	/api/users/profile	Update user profile (username, email, password)
+
 🎬 Movie Routes
 Method	Endpoint	Access	Description
 POST	/api/movies	Private	Create a new movie
@@ -95,6 +98,7 @@ GET	/api/movies	Public	Get all movies
 GET	/api/movies/:id	Public	Get movie by ID
 PUT	/api/movies/:id	Private	Update movie (only creator)
 DELETE	/api/movies/:id	Private	Delete movie (only creator)
+
 ⭐ Review Routes
 Method	Endpoint	Access	Description
 POST	/api/reviews/:movieId	Private	Add a review to a movie
@@ -107,6 +111,7 @@ One review per user per movie
 🌍 External API (OMDb)
 Method	Endpoint	Description
 GET	/api/movies/external/search?title=Inception	Search movie by title
+
 ⭐ Features
 
 User authentication with JWT

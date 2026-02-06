@@ -11,12 +11,12 @@ const {
     searchMovieExternal
 } = require('../controllers/movieController')
 
+router.get('/external/search', searchMovieExternal)
 router.post('/', protect, createMovie)
 router.get('/', getMovies)
 router.get('/:id', getMovieById)
 router.put('/:id', protect, updateMovie)
 router.delete('/:id', protect, deleteMovie)
-router.get('/external/search', searchMovieExternal)
 
 
 module.exports = router

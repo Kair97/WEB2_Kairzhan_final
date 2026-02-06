@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 
-const protect  = async (req, res, next) => {
+const protect = async (req, res, next) => {
     let token
 
     if (
@@ -12,6 +12,7 @@ const protect  = async (req, res, next) => {
 
         try{
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            console.log(decoded)
             req.user = await User.findById(decoded.id).select('-password')
             next()
         }catch(error){

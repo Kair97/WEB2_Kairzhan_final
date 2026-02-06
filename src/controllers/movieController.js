@@ -130,7 +130,7 @@ const searchMovieExternal = async (req, res, next) =>{
             `https://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&t=${title}`
         )
 
-        if (!response.data.Response === 'False'){
+        if (response.data.Response === 'False'){
             return res.status(404).json({message: 'Movie not found'})
         }
 

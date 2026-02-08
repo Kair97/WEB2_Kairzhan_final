@@ -80,6 +80,11 @@ const updateMovie = async (req, res) =>{
             return res.status(403).json({message:"Not allowed for you"})
         }
 
+        if (!req.body.title || !req.body.description || !req.body.trailerUrl){
+            res.status(400).json({message: "please fill all fields"})
+            return 
+        }
+
         movie.title = req.body.title || movie.title
         movie.description = req.body.description || movie.description
         movie.trailerUrl = req.body.trailerUrl || movie.trailerUrl

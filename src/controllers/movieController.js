@@ -93,6 +93,32 @@ const updateMovie = async (req, res) =>{
     }
 }
 
+const patchupdateMovie = async (req, res) =>{
+    try{    
+
+        const movie = await Movie.findById(req.params.id)
+
+        if (!movie) {
+            return res.status(404).json({message: "Movie not found"})
+        }
+
+        if (movie.createdBy.toString() !== req.user._id.toString()){
+            return res.status(403).json({message:"Not allowed for you"})
+        }
+
+        movie.title = req.body.title || movie.title
+        movie.description = req.body.description || movie.description
+        movie.trailerUrl = req.body.trailerUrl || movie.trailerUrl
+
+        const updMovie = await movie.save()
+
+        res.status(200).json({message: "successfully updated", updMovie})
+
+    }catch(error){
+        res.status(400).json({message: error.message})
+    }
+}
+
 
 const deleteMovie = async (req, res) => {
     try{
@@ -149,4 +175,4 @@ const searchMovieExternal = async (req, res, next) =>{
 }
 
 
-module.exports = {createMovie, getMovies, getMovieById, updateMovie, deleteMovie, searchMovieExternal}
+module.exports = {createMovie, getMovies, getMovieById, updateMovie, deleteMovie, patchupdateMovie, searchMovieExternal}

@@ -8,6 +8,7 @@ const {
     getMovieById,
     updateMovie, 
     deleteMovie,
+    patchupdateMovie,
     searchMovieExternal
 } = require('../controllers/movieController')
 
@@ -16,6 +17,7 @@ router.post('/', protect, createMovie)
 router.get('/', getMovies)
 router.get('/:id', getMovieById)
 router.put('/:id', protect, updateMovie)
+router.patch('/:id', protect, patchupdateMovie)
 router.delete('/:id', protect, deleteMovie)
 
 

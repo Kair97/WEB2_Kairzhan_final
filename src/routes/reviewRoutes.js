@@ -5,10 +5,12 @@ const protect = require('../middleware/authMiddleware')
 
 const {
     createReview,
-    getReviewsByMovie
+    getReviewsByMovie,
+    deleteReview
 } = require('../controllers/reviewController')
 
 router.post('/:movieId', protect, createReview)
+router.delete('/:id', protect, deleteReview)
 router.get('/:movieId', getReviewsByMovie)
 
 module.exports = router

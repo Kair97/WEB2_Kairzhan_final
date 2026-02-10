@@ -1,0 +1,3 @@
+if (!getToken()) {
+    window.location.href = "/pages/login.html";
+}

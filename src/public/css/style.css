@@ -1,18 +1,17 @@
 body {
-    font-family: Arial;
-    background: #f4f4f4;
-    padding: 20px;
-}
-
-input, button {
-    display: block;
-    margin: 10px 0;
-    padding: 8px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .card {
-    background: white;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.delete-btn {
+    background-color: #dc3545;
+}
+
+.edit-btn {
+    background-color: #0dcaf0;
 }

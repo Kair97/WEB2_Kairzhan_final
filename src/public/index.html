@@ -7,15 +7,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .hero-section {
+            padding: 80px 0;
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .feature-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            background: white;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div class="container">
-            <a class="navbar-brand" href="/">Movie Platform</a>
+            <a class="navbar-brand fw-bold" href="/">Movie Platform</a>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="/pages/movies.html">Movies</a>
                 <a class="nav-link" href="/pages/login.html">Login</a>
@@ -24,38 +36,35 @@
         </div>
     </nav>
 
-    <div class="container text-center text-white mt-5">
-        <h1 class="display-3 mb-4">Welcome to Movie Review Platform</h1>
-        <p class="lead mb-5">Discover, review, and share your favorite movies</p>
-        
-        <div class="mb-5">
-            <a href="/pages/movies.html" class="btn btn-light btn-lg me-3">Browse Movies</a>
-            <a href="/pages/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-3">Movie Review Platform</h1>
+            <p class="lead text-muted mb-4">A simple platform to discover and review movies</p>
+            <div>
+                <a href="/pages/movies.html" class="btn btn-dark btn-lg me-2">Browse Movies</a>
+                <a href="/pages/register.html" class="btn btn-outline-dark btn-lg">Get Started</a>
+            </div>
         </div>
+    </div>
 
-        <div class="row mt-5">
+    <div class="container my-5">
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="card bg-white text-dark mb-3">
-                    <div class="card-body">
-                        <h3>🎬 Create Movies</h3>
-                        <p>Add your favorite movies to the platform</p>
-                    </div>
+                <div class="feature-card">
+                    <h4>Create Movies</h4>
+                    <p class="text-muted mb-0">Add movies to the platform and share with others</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-white text-dark mb-3">
-                    <div class="card-body">
-                        <h3>⭐ Write Reviews</h3>
-                        <p>Share your thoughts and ratings</p>
-                    </div>
+                <div class="feature-card">
+                    <h4>Write Reviews</h4>
+                    <p class="text-muted mb-0">Rate and review movies you've watched</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card bg-white text-dark mb-3">
-                    <div class="card-body">
-                        <h3>🔍 Discover</h3>
-                        <p>Find new movies to watch</p>
-                    </div>
+                <div class="feature-card">
+                    <h4>Discover</h4>
+                    <p class="text-muted mb-0">Find new movies based on community ratings</p>
                 </div>
             </div>
         </div>

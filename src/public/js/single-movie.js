@@ -19,12 +19,12 @@ async function loadMovie() {
         const movie = data.movie;
 
         document.getElementById("movieDetails").innerHTML = `
-            <h2>${movie.title}</h2>
-            <p><strong>Description:</strong> ${movie.description}</p>
-            ${movie.trailerUrl ? `<p><strong>Trailer:</strong> <a href="${movie.trailerUrl}" target="_blank">${movie.trailerUrl}</a></p>` : ''}
-            <p><strong>Average Rating:</strong> ${data.averageRating || 'No ratings yet'}/10</p>
-            <p><strong>Total Reviews:</strong> ${data.reviewsCount || 0}</p>
-            <p><strong>Created by:</strong> ${movie.createdBy?.username || 'Unknown'}</p>
+            <h3 class="fw-bold mb-3">${movie.title}</h3>
+            <p class="mb-2"><strong>Description:</strong> ${movie.description}</p>
+            ${movie.trailerUrl ? `<p class="mb-2"><strong>Trailer:</strong> <a href="${movie.trailerUrl}" target="_blank" class="text-dark">${movie.trailerUrl}</a></p>` : ''}
+            <p class="mb-2"><strong>Average Rating:</strong> ${data.averageRating || 'No ratings'}/10</p>
+            <p class="mb-2"><strong>Total Reviews:</strong> ${data.reviewsCount || 0}</p>
+            <p class="text-muted small mb-0">Created by ${movie.createdBy?.username || 'Unknown'}</p>
         `;
 
         if (movie.createdBy && movie.createdBy._id === myUserId) {
@@ -86,7 +86,7 @@ async function loadReviews() {
         container.innerHTML = "";
 
         if (reviews.length === 0) {
-            container.innerHTML = '<div class="alert alert-info">No reviews yet. Be the first to review!</div>';
+            container.innerHTML = '<div class="alert alert-light border">No reviews yet. Be the first!</div>';
             return;
         }
 
@@ -94,17 +94,17 @@ async function loadReviews() {
             let deleteBtn = "";
 
             if (r.user && r.user._id === myUserId) {
-                deleteBtn = `<button class="btn btn-danger btn-sm mt-2" onclick="deleteReview('${r._id}')">Delete</button>`;
+                deleteBtn = `<button class="btn btn-sm btn-outline-danger mt-2" onclick="deleteReview('${r._id}')">Delete</button>`;
             }
 
             container.innerHTML += `
-                <div class="card mb-3">
+                <div class="card border-0 shadow-sm mb-3 review-card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
                             <strong>${r.user?.username || 'Anonymous'}</strong>
-                            <span class="badge bg-primary">${r.rating}/10</span>
+                            <span class="badge bg-dark">${r.rating}/10</span>
                         </div>
-                        <p class="mt-2">${r.comment}</p>
+                        <p class="mb-2">${r.comment}</p>
                         <small class="text-muted">${new Date(r.createdAt).toLocaleDateString()}</small>
                         ${deleteBtn}
                     </div>

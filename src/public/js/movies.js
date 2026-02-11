@@ -14,28 +14,29 @@ async function loadMovies() {
         container.innerHTML = "";
 
         if (movies.length === 0) {
-            container.innerHTML = '<div class="alert alert-info">No movies yet. Create one!</div>';
+            container.innerHTML = '<div class="alert alert-light border">No movies yet. Create the first one!</div>';
             return;
         }
 
         movies.forEach(m => {
-            let deleteBtn = "";
-            let editBtn = "";
+            let actionButtons = '';
 
             if (m.createdBy && m.createdBy._id === myUserId) {
-                deleteBtn = `<button class="btn btn-danger btn-sm" onclick="deleteMovie('${m._id}')">Delete</button>`;
-                editBtn = `<a href="single-movie.html?id=${m._id}" class="btn btn-info btn-sm">Edit</a>`;
+                actionButtons = `
+                    <a href="single-movie.html?id=${m._id}" class="btn btn-sm btn-outline-dark me-2">Edit</a>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteMovie('${m._id}')">Delete</button>
+                `;
+            } else {
+                actionButtons = `<a href="single-movie.html?id=${m._id}" class="btn btn-sm btn-outline-dark">View Details</a>`;
             }
 
             container.innerHTML += `
-                <div class="card">
+                <div class="card border-0 shadow-sm mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">${m.title}</h5>
-                        <p class="card-text">${m.description}</p>
-                        <p class="text-muted small">Created by: ${m.createdBy?.username || 'Unknown'}</p>
-                        <a href="single-movie.html?id=${m._id}" class="btn btn-primary btn-sm">View Details</a>
-                        ${editBtn}
-                        ${deleteBtn}
+                        <h5 class="card-title fw-bold mb-2">${m.title}</h5>
+                        <p class="card-text text-muted mb-2">${m.description}</p>
+                        <p class="text-muted small mb-3">By ${m.createdBy?.username || 'Unknown'}</p>
+                        ${actionButtons}
                     </div>
                 </div>
             `;

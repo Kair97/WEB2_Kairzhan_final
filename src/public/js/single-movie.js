@@ -1,28 +1,44 @@
 const params = new URLSearchParams(window.location.search);
 const movieId = params.get("id");
-const myUserId = String(localStorage.getItem("userId"));
+const myUserId = getUserId();
+
+if (!movieId) {
+    alert("No movie specified");
+    window.location.href = "/pages/movies.html";
+}
 
 async function loadMovie() {
-    const res = await fetch(`${API_BASE}/movies/${movieId}`);
-    const data = await res.json();
+    try {
+        const res = await fetch(`${API_BASE}/movies/${movieId}`);
+        
+        if (!res.ok) {
+            throw new Error("Movie not found");
+        }
 
-    const movie = data.movie;
+        const data = await res.json();
+        const movie = data.movie;
 
-    document.getElementById("movie").innerHTML = `
-        <h2>${movie.title}</h2>
-        <p>${movie.description}</p>
-        <p>Rating: ${data.averageRating}</p>
-    `;
+        document.getElementById("movieDetails").innerHTML = `
+            <h2>${movie.title}</h2>
+            <p><strong>Description:</strong> ${movie.description}</p>
+            ${movie.trailerUrl ? `<p><strong>Trailer:</strong> <a href="${movie.trailerUrl}" target="_blank">${movie.trailerUrl}</a></p>` : ''}
+            <p><strong>Average Rating:</strong> ${data.averageRating || 'No ratings yet'}/10</p>
+            <p><strong>Total Reviews:</strong> ${data.reviewsCount || 0}</p>
+            <p><strong>Created by:</strong> ${movie.createdBy?.username || 'Unknown'}</p>
+        `;
 
-    // Show edit form ONLY for owner
-    if (movie.createdBy && String(movie.createdBy._id) === myUserId) {
-        document.getElementById("editMovie").style.display = "block";
-        document.getElementById("editTitle").value = movie.title;
-        document.getElementById("editDescription").value = movie.description;
-        document.getElementById("editTrailer").value = movie.trailerUrl || "";
+        if (movie.createdBy && movie.createdBy._id === myUserId) {
+            document.getElementById("editMovie").style.display = "block";
+            document.getElementById("editTitle").value = movie.title;
+            document.getElementById("editDescription").value = movie.description;
+            document.getElementById("editTrailer").value = movie.trailerUrl || "";
+        }
+
+        loadReviews();
+    } catch (error) {
+        console.error("Error loading movie:", error);
+        alert("Failed to load movie.");
     }
-
-    loadReviews();
 }
 
 async function updateMovie() {
@@ -30,75 +46,137 @@ async function updateMovie() {
     const description = document.getElementById("editDescription").value;
     const trailerUrl = document.getElementById("editTrailer").value;
 
-    const res = await fetchWithAuth(`${API_BASE}/movies/${movieId}`, {
-        method: "PUT",
-        body: JSON.stringify({ title, description, trailerUrl })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-        alert(data.message);
+    if (!title || !description) {
+        alert("Title and description are required");
         return;
     }
 
-    alert("Movie updated");
-    loadMovie();
+    try {
+        const res = await fetchWithAuth(`${API_BASE}/movies/${movieId}`, {
+            method: "PUT",
+            body: JSON.stringify({ title, description, trailerUrl })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Failed to update movie");
+            return;
+        }
+
+        alert("Movie updated successfully!");
+        loadMovie();
+    } catch (error) {
+        console.error("Error updating movie:", error);
+        alert("Failed to update movie.");
+    }
 }
 
 async function loadReviews() {
-    const res = await fetch(`${API_BASE}/reviews/${movieId}`);
-    const reviews = await res.json();
-
-    const container = document.getElementById("reviews");
-    container.innerHTML = "";
-
-    reviews.forEach(r => {
-        let deleteBtn = "";
-
-        if (r.user && String(r.user._id) === myUserId) {
-            deleteBtn = `<button onclick="deleteReview('${r._id}')">Delete</button>`;
+    try {
+        const res = await fetch(`${API_BASE}/reviews/${movieId}`);
+        
+        if (!res.ok) {
+            throw new Error("Failed to load reviews");
         }
 
-        container.innerHTML += `
-            <div class="card">
-                <b>${r.user.username}</b>
-                <p>${r.rating}/10</p>
-                <p>${r.comment}</p>
-                ${deleteBtn}
-            </div>
-        `;
-    });
+        const reviews = await res.json();
+
+        const container = document.getElementById("reviews");
+        container.innerHTML = "";
+
+        if (reviews.length === 0) {
+            container.innerHTML = '<div class="alert alert-info">No reviews yet. Be the first to review!</div>';
+            return;
+        }
+
+        reviews.forEach(r => {
+            let deleteBtn = "";
+
+            if (r.user && r.user._id === myUserId) {
+                deleteBtn = `<button class="btn btn-danger btn-sm mt-2" onclick="deleteReview('${r._id}')">Delete</button>`;
+            }
+
+            container.innerHTML += `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <strong>${r.user?.username || 'Anonymous'}</strong>
+                            <span class="badge bg-primary">${r.rating}/10</span>
+                        </div>
+                        <p class="mt-2">${r.comment}</p>
+                        <small class="text-muted">${new Date(r.createdAt).toLocaleDateString()}</small>
+                        ${deleteBtn}
+                    </div>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error("Error loading reviews:", error);
+    }
 }
 
 async function addReview() {
-    const rating = document.getElementById("rating").value;
+    const rating = parseInt(document.getElementById("rating").value);
     const comment = document.getElementById("comment").value;
 
-    const res = await fetchWithAuth(`${API_BASE}/reviews/${movieId}`, {
-        method: "POST",
-        body: JSON.stringify({ rating, comment })
-    });
-
-    if (!res.ok) {
-        const data = await res.json();
-        alert(data.message);
+    if (!rating || !comment) {
+        alert("Please provide both rating and comment");
         return;
     }
 
-    loadReviews();
+    if (rating < 1 || rating > 10) {
+        alert("Rating must be between 1 and 10");
+        return;
+    }
+
+    try {
+        const res = await fetchWithAuth(`${API_BASE}/reviews/${movieId}`, {
+            method: "POST",
+            body: JSON.stringify({ rating, comment })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Failed to add review");
+            return;
+        }
+
+        document.getElementById("rating").value = "";
+        document.getElementById("comment").value = "";
+
+        alert("Review added successfully!");
+        loadMovie();
+    } catch (error) {
+        console.error("Error adding review:", error);
+        alert("Failed to add review.");
+    }
 }
 
 async function deleteReview(reviewId) {
-    if (!confirm("Delete this review?")) return;
+    if (!confirm("Are you sure you want to delete this review?")) {
+        return;
+    }
 
-    const res = await fetchWithAuth(`${API_BASE}/reviews/${reviewId}`, {
-        method: "DELETE"
-    });
+    try {
+        const res = await fetchWithAuth(`${API_BASE}/reviews/${reviewId}`, {
+            method: "DELETE"
+        });
 
-    const data = await res.json();
-    alert(data.message);
-    loadReviews();
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Failed to delete review");
+            return;
+        }
+
+        alert("Review deleted successfully!");
+        loadMovie();
+    } catch (error) {
+        console.error("Error deleting review:", error);
+        alert("Failed to delete review.");
+    }
 }
 
 loadMovie();

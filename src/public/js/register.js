@@ -3,19 +3,29 @@ async function register() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const res = await fetch(`${API_BASE}/auth/register`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({username, email, password})
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-        alert(data.message);
+    if (!username || !email || !password) {
+        alert("Please fill in all fields");
         return;
     }
 
-    alert("Registered successfully");
-    window.location.href = "login.html";
+    try {
+        const res = await fetch(`${API_BASE}/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Registration failed");
+            return;
+        }
+
+        alert("Registered successfully! Please login.");
+        window.location.href = "login.html";
+    } catch (error) {
+        console.error("Registration error:", error);
+        alert("Registration failed. Please try again.");
+    }
 }

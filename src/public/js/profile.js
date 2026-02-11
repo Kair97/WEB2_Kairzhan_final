@@ -1,9 +1,19 @@
 async function loadProfile() {
-    const res = await fetchWithAuth(`${API_BASE}/users/profile`);
-    const user = await res.json();
+    try {
+        const res = await fetchWithAuth(`${API_BASE}/users/profile`);
+        
+        if (!res.ok) {
+            throw new Error("Failed to load profile");
+        }
 
-    document.getElementById("username").value = user.username;
-    document.getElementById("email").value = user.email;
+        const user = await res.json();
+
+        document.getElementById("username").value = user.username;
+        document.getElementById("email").value = user.email;
+    } catch (error) {
+        console.error("Error loading profile:", error);
+        alert("Failed to load profile.");
+    }
 }
 
 async function updateProfile() {
@@ -11,13 +21,32 @@ async function updateProfile() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const res = await fetchWithAuth(`${API_BASE}/users/profile`, {
-        method: "PUT",
-        body: JSON.stringify({username, email, password})
-    });
+    const body = { username, email };
+    
+    if (password) {
+        body.password = password;
+    }
 
-    const data = await res.json();
-    alert(data.message);
+    try {
+        const res = await fetchWithAuth(`${API_BASE}/users/profile`, {
+            method: "PUT",
+            body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Failed to update profile");
+            return;
+        }
+
+        document.getElementById("password").value = "";
+
+        alert("Profile updated successfully!");
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Failed to update profile.");
+    }
 }
 
 loadProfile();
